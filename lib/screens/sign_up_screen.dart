@@ -101,7 +101,7 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             Container(
-              //* Contact Number Text -------------------------------------------------------------------------------
+              //* SMS Verify Text -------------------------------------------------------------------------------
               padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
               alignment: Alignment.topLeft,
               child: Text(
@@ -114,7 +114,7 @@ class SignUpScreen extends StatelessWidget {
               ),
             ),
             Container(
-              //* Sign Up Button ----------------------------------------------------------------------------------
+              //* Continue Button ----------------------------------------------------------------------------------
               alignment: Alignment.bottomCenter,
               margin: EdgeInsets.fromLTRB(30, 20, 30, 8),
               child: RaisedButton(
