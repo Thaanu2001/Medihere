@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:medihere/screens/sign_up_screen.dart';
+import 'package:medihere/transitions/sliding_transition.dart';
+
 class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -12,10 +15,12 @@ class WelcomeScreen extends StatelessWidget {
           //mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Container(
+              //* Logo -------------------------------------------------------------------------------------------
               margin: EdgeInsets.fromLTRB(80, 60, 80, 0),
               child: Image.asset('lib/assets/logo.png'),
             ),
             Expanded(
+              //* Image -----------------------------------------------------------------------------------------
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -46,6 +51,7 @@ class WelcomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
+                  //* Sign Up Button ----------------------------------------------------------------------------------
                   alignment: Alignment.bottomCenter,
                   margin: EdgeInsets.fromLTRB(20, 0, 20, 8),
                   child: RaisedButton(
@@ -69,10 +75,14 @@ class WelcomeScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(15.0),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Route route = SlidingTransition(widget: SignUpScreen());
+                      Navigator.push(context, route);
+                    },
                   ),
                 ),
                 Container(
+                  //* Log In Button ----------------------------------------------------------------------------------
                   alignment: Alignment.bottomCenter,
                   margin: EdgeInsets.fromLTRB(20, 8, 20, 30),
                   child: RaisedButton(
