@@ -12,10 +12,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          scaffoldBackgroundColor: Color(0xfff9f9f9),
-          accentColor: Color(0xff3b53e5)),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        scaffoldBackgroundColor: Color(0xfff9f9f9),
+        accentColor: Color(0xff3b53e5),
+      ),
       home: WelcomeScreen(),
     );
   }

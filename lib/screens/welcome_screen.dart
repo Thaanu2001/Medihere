@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:medihere/screens/home_screen.dart';
 
 import 'package:medihere/screens/sign_up_screen.dart';
 import 'package:medihere/transitions/sliding_transition.dart';
+import 'package:medihere/widgets/bottom_menu_bar.dart';
 
 class WelcomeScreen extends StatelessWidget {
   @override
@@ -106,7 +108,10 @@ class WelcomeScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(15.0),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Route route = SlidingTransition(widget: BottomMenuBar());
+                      Navigator.push(context, route);
+                    },
                   ),
                 ),
               ],
