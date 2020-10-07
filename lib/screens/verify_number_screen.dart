@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:medihere/buttons/back_button.dart';
+import 'package:medihere/services/auth_service.dart';
 import 'package:medihere/transitions/sliding_transition.dart';
 import 'package:medihere/widgets/dismiss_keyboard.dart';
 
 class VerifyNumberScreen extends StatefulWidget {
+  final String verificationId;
+  VerifyNumberScreen({@required this.verificationId});
+
   @override
   _VerifyNumberScreenState createState() => _VerifyNumberScreenState();
 }
 
 class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
+  String smsCode;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +50,7 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
               alignment: Alignment.topLeft,
               child: TextField(
                 keyboardType: TextInputType.number,
-                maxLength: 4,
+                maxLength: 6,
                 style: TextStyle(
                     fontFamily: 'sf',
                     fontSize: 20,
@@ -64,6 +70,9 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
                         new BorderSide(color: Color(0xff3b53e5), width: 2),
                   ),
                 ),
+                onChanged: (value) {
+                  this.smsCode = value;
+                },
               ),
             ),
             Container(
@@ -111,8 +120,11 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
                 ),
                 onPressed: () {
                   dismissKeyboard(context);
-                  Route route = SlidingTransition(widget: VerifyNumberScreen());
-                  Navigator.push(context, route);
+                  print(smsCode);
+                  AuthService()
+                      .signInWithOTP(smsCode, widget.verificationId, context);
+                  // Route route = SlidingTransition(widget: VerifyNumberScreen());
+                  // Navigator.push(context, route);
                 },
               ),
             ),

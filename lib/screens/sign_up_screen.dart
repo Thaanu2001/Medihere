@@ -1,10 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medihere/buttons/back_button.dart';
 import 'package:medihere/screens/verify_number_screen.dart';
+import 'package:medihere/services/auth_service.dart';
 import 'package:medihere/transitions/sliding_transition.dart';
 import 'package:medihere/widgets/dismiss_keyboard.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
+  @override
+  _SignUpScreenState createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  String phoneNo, name, verificationId;
+  bool codeSent = false;
+
+  Future<void> verifyPhone(phoneNo) async {
+    final PhoneVerificationCompleted verified = (AuthCredential authResult) {
+      AuthService().signIn(authResult, context);
+    };
+
+    final PhoneVerificationFailed verificationFailed =
+        (FirebaseAuthException authException) {
+      print('Exception - ${authException.message}');
+    };
+
+    final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
+      this.verificationId = verId;
+      setState(() {
+        this.codeSent = true;
+      });
+      Route route = SlidingTransition(
+          widget: VerifyNumberScreen(
+        verificationId: verificationId,
+      ));
+      Navigator.push(context, route);
+    };
+
+    final PhoneCodeAutoRetrievalTimeout autoTimeout = (String verId) {
+      this.verificationId = verId;
+    };
+
+    await FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: '+94' + this.phoneNo,
+        codeAutoRetrievalTimeout: autoTimeout,
+        codeSent: smsSent,
+        timeout: const Duration(seconds: 5),
+        verificationCompleted: verified,
+        verificationFailed: verificationFailed);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,6 +103,9 @@ class SignUpScreen extends StatelessWidget {
                         new BorderSide(color: Color(0xff3b53e5), width: 2),
                   ),
                 ),
+                onChanged: (value) {
+                  this.name = value;
+                },
               ),
             ),
             Container(
@@ -79,6 +127,7 @@ class SignUpScreen extends StatelessWidget {
               alignment: Alignment.topLeft,
               child: TextField(
                 keyboardType: TextInputType.number,
+                maxLength: 10,
                 style: TextStyle(
                     fontFamily: 'sf',
                     fontSize: 20,
@@ -98,6 +147,9 @@ class SignUpScreen extends StatelessWidget {
                         new BorderSide(color: Color(0xff3b53e5), width: 2),
                   ),
                 ),
+                onChanged: (value) {
+                  this.phoneNo = value;
+                },
               ),
             ),
             Container(
@@ -140,8 +192,7 @@ class SignUpScreen extends StatelessWidget {
                 ),
                 onPressed: () {
                   dismissKeyboard(context);
-                  Route route = SlidingTransition(widget: VerifyNumberScreen());
-                  Navigator.push(context, route);
+                  verifyPhone(phoneNo);
                 },
               ),
             ),
