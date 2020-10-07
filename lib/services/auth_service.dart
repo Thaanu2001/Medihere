@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:medihere/screens/home_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:medihere/screens/welcome_screen.dart';
 import 'package:medihere/transitions/sliding_transition.dart';
 import 'package:medihere/widgets/bottom_menu_bar.dart';
@@ -26,11 +26,11 @@ class AuthService {
   }
 
   //* Sign in
-  signIn(AuthCredential authCreds, context) {
+  signIn(AuthCredential authCreds, context, name, phoneNo) {
     FirebaseAuth.instance.signInWithCredential(authCreds);
     print('Signed In');
 
-    registerUser();
+    registerUser(name, phoneNo);
 
     Route route = SlidingTransition(widget: BottomMenuBar());
     Navigator.pushAndRemoveUntil(
@@ -38,12 +38,17 @@ class AuthService {
   }
 
   //* Sign in with OTP
-  signInWithOTP(smsCode, verId, context) {
+  signInWithOTP(smsCode, verId, context, name, phoneNo) {
     AuthCredential authCreds =
         PhoneAuthProvider.credential(verificationId: verId, smsCode: smsCode);
-    signIn(authCreds, context);
+    signIn(authCreds, context, name, phoneNo);
   }
 
   //* Register user into firestore
-  registerUser() {}
+  registerUser(name, phoneNo) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc("$phoneNo")
+        .set({'name': '$name', 'phone-number': '$phoneNo'});
+  }
 }

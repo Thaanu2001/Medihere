@@ -14,10 +14,12 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   String phoneNo, name, verificationId;
   bool codeSent = false;
+  bool error = false;
+  String errorMessage;
 
   Future<void> verifyPhone(phoneNo) async {
     final PhoneVerificationCompleted verified = (AuthCredential authResult) {
-      AuthService().signIn(authResult, context);
+      AuthService().signIn(authResult, context, name, phoneNo);
     };
 
     final PhoneVerificationFailed verificationFailed =
@@ -33,6 +35,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       Route route = SlidingTransition(
           widget: VerifyNumberScreen(
         verificationId: verificationId,
+        name: name,
+        phoneNo: phoneNo,
       ));
       Navigator.push(context, route);
     };
@@ -154,10 +158,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             Container(
               //* SMS Verify Text -------------------------------------------------------------------------------
-              padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
+              padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
               alignment: Alignment.topLeft,
               child: Text(
-                'By continuing you may recieve an SMS for verification. Message and data rates may apply.',
+                'By continuing you may recieve an SMS for verification.',
                 style: TextStyle(
                     fontFamily: 'sf',
                     fontSize: 15,
@@ -165,10 +169,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     fontWeight: FontWeight.w400),
               ),
             ),
+            (error)
+                ? Container(
+                    //* SMS Verify Text -------------------------------------------------------------------------------
+                    padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      '$errorMessage',
+                      style: TextStyle(
+                          fontFamily: 'sf',
+                          fontSize: 15,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  )
+                : Container(),
             Container(
               //* Continue Button ----------------------------------------------------------------------------------
               alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.fromLTRB(30, 20, 30, 8),
+              margin: EdgeInsets.fromLTRB(30, 15, 30, 8),
               child: RaisedButton(
                 child: Container(
                   width: double.infinity,
@@ -191,8 +210,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   borderRadius: new BorderRadius.circular(15.0),
                 ),
                 onPressed: () {
-                  dismissKeyboard(context);
-                  verifyPhone(phoneNo);
+                  if (name == null || phoneNo == null) {
+                    setState(() {
+                      error = true;
+                      errorMessage = 'Please enter details correctly';
+                    });
+                  } else if (phoneNo.length != 10) {
+                    setState(() {
+                      error = true;
+                      errorMessage = 'Contact number must include 10 numbers';
+                    });
+                  } else {
+                    dismissKeyboard(context);
+                    verifyPhone(phoneNo);
+                  }
                 },
               ),
             ),

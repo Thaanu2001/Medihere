@@ -53,14 +53,14 @@ class WelcomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Container(
-                  //* Sign Up Button ----------------------------------------------------------------------------------
+                  //* Get Started Button ----------------------------------------------------------------------------------
                   alignment: Alignment.bottomCenter,
-                  margin: EdgeInsets.fromLTRB(20, 0, 20, 8),
+                  margin: EdgeInsets.fromLTRB(20, 0, 20, 30),
                   child: RaisedButton(
                     child: Container(
                       width: double.infinity,
                       child: Text(
-                        'Sign Up',
+                        'Get Started',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontFamily: 'sf',
@@ -70,7 +70,7 @@ class WelcomeScreen extends StatelessWidget {
                         //width: double.infinity,
                       ),
                     ),
-                    elevation: 4,
+                    elevation: 5,
                     highlightColor: Color(0xff101010),
                     color: Colors.black,
                     padding: EdgeInsets.fromLTRB(15, 12, 15, 12),
@@ -83,37 +83,37 @@ class WelcomeScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                Container(
-                  //* Log In Button ----------------------------------------------------------------------------------
-                  alignment: Alignment.bottomCenter,
-                  margin: EdgeInsets.fromLTRB(20, 8, 20, 30),
-                  child: RaisedButton(
-                    child: Container(
-                      width: double.infinity,
-                      child: Text(
-                        'Log In',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontFamily: 'sf',
-                            fontSize: 25,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                        //width: double.infinity,
-                      ),
-                    ),
-                    elevation: 4,
-                    highlightColor: Color(0xffcccccc),
-                    color: Colors.white,
-                    padding: EdgeInsets.fromLTRB(15, 12, 15, 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(15.0),
-                    ),
-                    onPressed: () {
-                      Route route = SlidingTransition(widget: BottomMenuBar());
-                      Navigator.push(context, route);
-                    },
-                  ),
-                ),
+                // Container(
+                //   //* Log In Button ----------------------------------------------------------------------------------
+                //   alignment: Alignment.bottomCenter,
+                //   margin: EdgeInsets.fromLTRB(20, 8, 20, 30),
+                //   child: RaisedButton(
+                //     child: Container(
+                //       width: double.infinity,
+                //       child: Text(
+                //         'Log In',
+                //         textAlign: TextAlign.center,
+                //         style: TextStyle(
+                //             fontFamily: 'sf',
+                //             fontSize: 25,
+                //             color: Colors.black,
+                //             fontWeight: FontWeight.w500),
+                //         //width: double.infinity,
+                //       ),
+                //     ),
+                //     elevation: 4,
+                //     highlightColor: Color(0xffcccccc),
+                //     color: Colors.white,
+                //     padding: EdgeInsets.fromLTRB(15, 12, 15, 12),
+                //     shape: RoundedRectangleBorder(
+                //       borderRadius: new BorderRadius.circular(15.0),
+                //     ),
+                //     onPressed: () {
+                //       Route route = SlidingTransition(widget: BottomMenuBar());
+                //       Navigator.push(context, route);
+                //     },
+                //   ),
+                // ),
               ],
             ),
           ],

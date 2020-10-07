@@ -5,8 +5,11 @@ import 'package:medihere/transitions/sliding_transition.dart';
 import 'package:medihere/widgets/dismiss_keyboard.dart';
 
 class VerifyNumberScreen extends StatefulWidget {
-  final String verificationId;
-  VerifyNumberScreen({@required this.verificationId});
+  final String verificationId, name, phoneNo;
+  VerifyNumberScreen(
+      {@required this.verificationId,
+      @required this.name,
+      @required this.phoneNo});
 
   @override
   _VerifyNumberScreenState createState() => _VerifyNumberScreenState();
@@ -36,7 +39,7 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
               padding: EdgeInsets.fromLTRB(30, 30, 0, 0),
               alignment: Alignment.topLeft,
               child: Text(
-                'Please enter 4-digit code sent to you  at 077 123 4567.',
+                'Please enter 6-digit code sent to you  at ${widget.phoneNo}.',
                 style: TextStyle(
                     fontFamily: 'sf',
                     fontSize: 22,
@@ -121,8 +124,8 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
                 onPressed: () {
                   dismissKeyboard(context);
                   print(smsCode);
-                  AuthService()
-                      .signInWithOTP(smsCode, widget.verificationId, context);
+                  AuthService().signInWithOTP(smsCode, widget.verificationId,
+                      context, widget.name, widget.phoneNo);
                   // Route route = SlidingTransition(widget: VerifyNumberScreen());
                   // Navigator.push(context, route);
                 },
