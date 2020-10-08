@@ -8,10 +8,10 @@ import 'package:medihere/widgets/dismiss_keyboard.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  SignUpScreenState createState() => SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class SignUpScreenState extends State<SignUpScreen> {
   String phoneNo, name, verificationId;
   bool codeSent = false;
   bool error = false;
@@ -24,7 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     final PhoneVerificationFailed verificationFailed =
         (FirebaseAuthException authException) {
-      print('Exception - ${authException.message}');
+      print('Exception - ${authException}');
     };
 
     final PhoneCodeSent smsSent = (String verId, [int forceResend]) {
@@ -46,10 +46,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     };
 
     await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '+94' + this.phoneNo,
+        phoneNumber: '+94' + phoneNo,
         codeAutoRetrievalTimeout: autoTimeout,
         codeSent: smsSent,
-        timeout: const Duration(seconds: 5),
+        timeout: const Duration(seconds: 60),
         verificationCompleted: verified,
         verificationFailed: verificationFailed);
   }
@@ -221,6 +221,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       errorMessage = 'Contact number must include 10 numbers';
                     });
                   } else {
+                    error = false;
                     dismissKeyboard(context);
                     verifyPhone(phoneNo);
                   }

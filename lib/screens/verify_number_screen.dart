@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:quiver/async.dart';
 import 'package:medihere/buttons/back_button.dart';
+import 'package:medihere/screens/sign_up_screen.dart';
 import 'package:medihere/services/auth_service.dart';
-import 'package:medihere/transitions/sliding_transition.dart';
 import 'package:medihere/widgets/dismiss_keyboard.dart';
 
 class VerifyNumberScreen extends StatefulWidget {
@@ -17,6 +18,37 @@ class VerifyNumberScreen extends StatefulWidget {
 
 class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
   String smsCode;
+  // int _start = 30;
+  // int _current = 10;
+  // bool resend = false;
+
+  // void startTimer() {
+  //   CountdownTimer countDownTimer = new CountdownTimer(
+  //     new Duration(seconds: _start),
+  //     new Duration(seconds: 1),
+  //   );
+
+  //   var sub = countDownTimer.listen(null);
+  //   sub.onData((duration) {
+  //     setState(() {
+  //       _current = _start - duration.elapsed.inSeconds;
+  //     });
+  //   });
+
+  //   sub.onDone(() {
+  //     print("Done");
+  //     setState(() {
+  //       resend = true;
+  //     });
+  //     sub.cancel();
+  //   });
+  // }
+
+  // @override
+  // void initState() {
+  //   startTimer();
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +68,7 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
             ),
             Container(
               //* Security Key Text ---------------------------------------------------------------------------------
-              padding: EdgeInsets.fromLTRB(30, 30, 0, 0),
+              padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
               alignment: Alignment.topLeft,
               child: Text(
                 'Please enter 6-digit code sent to you  at ${widget.phoneNo}.',
@@ -78,26 +110,41 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
                 },
               ),
             ),
+            // (!resend)
+            //     ? Container(
+            //         //* Security Key Text ---------------------------------------------------------------------------------
+            //         padding: EdgeInsets.fromLTRB(30, 5, 0, 0),
+            //         alignment: Alignment.topLeft,
+            //         child: Text(
+            //           'Resend code in $_current',
+            //           style: TextStyle(
+            //               fontFamily: 'sf',
+            //               fontSize: 15,
+            //               color: Colors.grey[800],
+            //               fontWeight: FontWeight.w400),
+            //         ),
+            //       )
+            //     : Container(
+            //         //* Security Key Text ---------------------------------------------------------------------------------
+            //         padding: EdgeInsets.fromLTRB(30, 5, 0, 0),
+            //         alignment: Alignment.topLeft,
+            //         child: InkWell(
+            //           onTap: () {
+            //             print(widget.phoneNo);
+            //             SignUpScreenState().verifyPhone(widget.phoneNo);
+            //           },
+            //           child: Text(
+            //             'I haven’t recieved the code',
+            //             style: TextStyle(
+            //                 fontFamily: 'sf',
+            //                 fontSize: 15,
+            //                 color: Color(0xff3b53e5),
+            //                 fontWeight: FontWeight.w400),
+            //           ),
+            //         ),
+            //       ),
             Container(
-              //* Security Key Text ---------------------------------------------------------------------------------
-              padding: EdgeInsets.fromLTRB(30, 5, 0, 0),
-              alignment: Alignment.topLeft,
-              child: InkWell(
-                onTap: () {
-                  print('bls');
-                },
-                child: Text(
-                  'I haven’t recieved the code',
-                  style: TextStyle(
-                      fontFamily: 'sf',
-                      fontSize: 15,
-                      color: Color(0xff3b53e5),
-                      fontWeight: FontWeight.w400),
-                ),
-              ),
-            ),
-            Container(
-              //* Sign Up Button ----------------------------------------------------------------------------------
+              //* Continue Button ----------------------------------------------------------------------------------
               alignment: Alignment.bottomCenter,
               margin: EdgeInsets.fromLTRB(30, 20, 30, 8),
               child: RaisedButton(
