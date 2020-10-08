@@ -19,7 +19,10 @@ class _BottomMenuBarState extends State<BottomMenuBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _children[_currentIndex], // new
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _children,
+      ), // new
       bottomNavigationBar: BottomNavigationBar(
         onTap: (value) {
           onTabTapped(value);

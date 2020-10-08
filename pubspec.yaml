@@ -34,9 +34,12 @@ dev_dependencies:
     sdk: flutter
   firebase_auth:
   firebase_core:
+  firebase_storage:
   cloud_firestore:
   geoflutterfire:
   location:
+  image_picker:
+  image_cropper:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
