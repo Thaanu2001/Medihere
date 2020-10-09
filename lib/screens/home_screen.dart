@@ -26,7 +26,8 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   bool get wantKeepAlive => true;
 
-  _openGallery(BuildContext context) async {
+  _openGallery(BuildContext context, String pharmacyName, String pharmacyPlace,
+      String pharmacyCode) async {
     //* Get prescription using gallery --------------------------------------------------------------------------------
     var picture = await ImagePicker().getImage(source: ImageSource.gallery);
     this.setState(() {
@@ -34,10 +35,11 @@ class _HomeScreenState extends State<HomeScreen>
       print('Hereeeeeeeeee - ${imageFile.path}');
     });
     Navigator.of(context).pop();
-    _cropImage(context);
+    _cropImage(context, pharmacyName, pharmacyPlace, pharmacyCode);
   }
 
-  _openCamera(BuildContext context) async {
+  _openCamera(BuildContext context, String pharmacyName, String pharmacyPlace,
+      String pharmacyCode) async {
     //* Get prescription using camera --------------------------------------------------------------------------------
     var picture = await ImagePicker().getImage(source: ImageSource.camera);
     this.setState(() {
@@ -45,10 +47,11 @@ class _HomeScreenState extends State<HomeScreen>
       print('Hereeeeeeeeee - ${imageFile.path}');
     });
     Navigator.of(context).pop();
-    _cropImage(context);
+    _cropImage(context, pharmacyName, pharmacyPlace, pharmacyCode);
   }
 
-  _cropImage(BuildContext context) async {
+  _cropImage(BuildContext context, String pharmacyName, String pharmacyPlace,
+      String pharmacyCode) async {
     //* Crop the imported image -----------------------------------------------------------------------------------
     File cropped = await ImageCropper.cropImage(
       sourcePath: imageFile.path,
@@ -62,12 +65,17 @@ class _HomeScreenState extends State<HomeScreen>
       }
     });
 
-    Route route = SlidingTransition(
-      widget: PrescriptionUploadScreen(
-        file: croppedImage,
-      ),
-    );
-    Navigator.push(_scaffoldKey.currentContext, route);
+    if (croppedImage != null) {
+      Route route = SlidingTransition(
+        widget: PrescriptionUploadScreen(
+          file: croppedImage,
+          pharmacyName: pharmacyName,
+          pharmacyPlace: pharmacyPlace,
+          pharmacyCode: pharmacyCode,
+        ),
+      );
+      Navigator.push(_scaffoldKey.currentContext, route);
+    }
   }
 
   @override
@@ -117,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
                 Container(
-                  //* Location Change button ---------------------------------------------------------------------------
+                  //* Refresh button --------------------------------------------------------------------------------
                   padding: EdgeInsets.fromLTRB(0, 55, 45, 10),
                   alignment: Alignment.topRight,
                   child: InkWell(
@@ -220,13 +228,11 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ),
                     onTap: () {
-                      // Route route = SlidingTransition(
-                      //   widget: CameraScreen(
-                      //     pharmacyCode: snapshot['code'].toString(),
-                      //   ),
-                      // );
-                      // Navigator.push(context, route);
-                      importChoiceDialog(context);
+                      importChoiceDialog(
+                          context,
+                          snapshot['name'].toString(),
+                          snapshot['place'].toString(),
+                          snapshot['place'].toString());
                     },
                   ),
                   decoration: BoxDecoration(
@@ -293,7 +299,8 @@ class _HomeScreenState extends State<HomeScreen>
     return '';
   }
 
-  importChoiceDialog(BuildContext context) {
+  importChoiceDialog(BuildContext context, String pharmacyName,
+      String pharmacyPlace, String pharmacyCode) {
     //* Import choice dialog ---------------------------------------------------------------------------------
     return showDialog(
       context: context,
@@ -337,7 +344,8 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                   onTap: () {
-                    _openCamera(context);
+                    _openCamera(
+                        context, pharmacyName, pharmacyPlace, pharmacyCode);
                   },
                 ),
                 Divider(
@@ -365,7 +373,8 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                   ),
                   onTap: () {
-                    _openGallery(context);
+                    _openGallery(
+                        context, pharmacyName, pharmacyPlace, pharmacyCode);
                   },
                 ),
               ],
