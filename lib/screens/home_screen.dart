@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:medihere/screens/prescription_upload_screen.dart';
+import 'package:medihere/sharedData.dart';
 import 'package:medihere/transitions/sliding_transition.dart';
 import 'package:medihere/widgets/scroll_glow_disabler.dart';
 
@@ -56,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen>
     File cropped = await ImageCropper.cropImage(
       sourcePath: imageFile.path,
       androidUiSettings: AndroidUiSettings(
-        activeControlsWidgetColor: Color(0xff3b53e5),
+        activeControlsWidgetColor: SharedData.mainColor,
       ),
     );
     setState(() {
@@ -118,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen>
                       style: TextStyle(
                           fontFamily: 'sf',
                           fontSize: 15,
-                          color: Color(0xff3b53e5),
+                          color: SharedData.mainColor,
                           fontWeight: FontWeight.w400),
                     ),
                     onTap: () {},
@@ -132,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen>
                     child: Icon(
                       Icons.refresh,
                       size: 30,
-                      color: Color(0xff3b53e5),
+                      color: SharedData.mainColor,
                     ),
                     onTap: () {
                       //currentLocation = null;

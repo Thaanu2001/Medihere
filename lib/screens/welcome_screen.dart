@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medihere/screens/home_screen.dart';
 
 import 'package:medihere/screens/sign_up_screen.dart';
+import 'package:medihere/sharedData.dart';
 import 'package:medihere/transitions/sliding_transition.dart';
 import 'package:medihere/widgets/bottom_menu_bar.dart';
 
@@ -9,7 +10,7 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff3b53e5),
+      backgroundColor: SharedData.mainColor,
       body: Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

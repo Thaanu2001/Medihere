@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medihere/sharedData.dart';
 import 'package:quiver/async.dart';
 import 'package:medihere/buttons/back_button.dart';
 import 'package:medihere/screens/sign_up_screen.dart';
@@ -98,11 +99,11 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
                   counter: SizedBox.shrink(),
                   enabledBorder: UnderlineInputBorder(
                     borderSide:
-                        new BorderSide(color: Color(0xff3b53e5), width: 2),
+                        new BorderSide(color: SharedData.mainColor, width: 2),
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide:
-                        new BorderSide(color: Color(0xff3b53e5), width: 2),
+                        new BorderSide(color: SharedData.mainColor, width: 2),
                   ),
                 ),
                 onChanged: (value) {
@@ -138,7 +139,7 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
             //             style: TextStyle(
             //                 fontFamily: 'sf',
             //                 fontSize: 15,
-            //                 color: Color(0xff3b53e5),
+            //                 color: SharedData.mainColor,
             //                 fontWeight: FontWeight.w400),
             //           ),
             //         ),
@@ -163,7 +164,7 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
                 ),
                 elevation: 4,
                 highlightColor: Color(0xff4b62ed),
-                color: Color(0xff3b53e5),
+                color: SharedData.mainColor,
                 padding: EdgeInsets.fromLTRB(15, 12, 15, 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(15.0),

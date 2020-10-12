@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medihere/screens/home_screen.dart';
 import 'package:medihere/screens/orders_screen.dart';
 import 'package:medihere/screens/profile_screen.dart';
+import 'package:medihere/sharedData.dart';
 
 class BottomMenuBar extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class _BottomMenuBarState extends State<BottomMenuBar> {
           onTabTapped(value);
         }, // new
         backgroundColor: Color(0xFFe6e9f8),
-        selectedItemColor: Color(0xff3b53e5),
+        selectedItemColor: SharedData.mainColor,
         currentIndex: _currentIndex, // new
         items: [
           new BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),

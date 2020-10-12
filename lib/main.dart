@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:medihere/screens/welcome_screen.dart';
 import 'package:medihere/services/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:medihere/sharedData.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,7 @@ class MediHere extends StatelessWidget {
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         scaffoldBackgroundColor: Color(0xffececec),
-        accentColor: Color(0xff3b53e5),
+        accentColor: SharedData.mainColor,
       ),
       home: AuthService().handleAuth(),
     );

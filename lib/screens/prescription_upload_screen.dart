@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:medihere/buttons/back_button.dart';
+import 'package:medihere/sharedData.dart';
 
 class PrescriptionUploadScreen extends StatefulWidget {
   final File file;
@@ -68,7 +69,7 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
     File cropped = await ImageCropper.cropImage(
       sourcePath: imageFile.path,
       androidUiSettings: AndroidUiSettings(
-        activeControlsWidgetColor: Color(0xff3b53e5),
+        activeControlsWidgetColor: SharedData.mainColor,
       ),
     );
     setState(() {
@@ -145,8 +146,17 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                 alignment: Alignment.topLeft,
                 margin: EdgeInsets.only(top: 40, left: 20),
                 child: BackActionButton(
-                  onPressed: () {
+                  onPressed: () async {
                     Navigator.pop(context);
+                    if (isImage1Available) {
+                      await _storage.ref().child(filePath1).delete();
+                    }
+                    if (isImage2Available) {
+                      await _storage.ref().child(filePath2).delete();
+                    }
+                    if (isImage3Available) {
+                      await _storage.ref().child(filePath3).delete();
+                    }
                   },
                 ),
               ),

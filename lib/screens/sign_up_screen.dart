@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medihere/buttons/back_button.dart';
 import 'package:medihere/screens/verify_number_screen.dart';
 import 'package:medihere/services/auth_service.dart';
+import 'package:medihere/sharedData.dart';
 import 'package:medihere/transitions/sliding_transition.dart';
 import 'package:medihere/widgets/dismiss_keyboard.dart';
 
@@ -100,11 +101,11 @@ class SignUpScreenState extends State<SignUpScreen> {
                   counter: SizedBox.shrink(),
                   enabledBorder: UnderlineInputBorder(
                     borderSide:
-                        new BorderSide(color: Color(0xff3b53e5), width: 2),
+                        new BorderSide(color: SharedData.mainColor, width: 2),
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide:
-                        new BorderSide(color: Color(0xff3b53e5), width: 2),
+                        new BorderSide(color: SharedData.mainColor, width: 2),
                   ),
                 ),
                 onChanged: (value) {
@@ -144,11 +145,11 @@ class SignUpScreenState extends State<SignUpScreen> {
                   counter: SizedBox.shrink(),
                   enabledBorder: UnderlineInputBorder(
                     borderSide:
-                        new BorderSide(color: Color(0xff3b53e5), width: 2),
+                        new BorderSide(color: SharedData.mainColor, width: 2),
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide:
-                        new BorderSide(color: Color(0xff3b53e5), width: 2),
+                        new BorderSide(color: SharedData.mainColor, width: 2),
                   ),
                 ),
                 onChanged: (value) {
@@ -204,7 +205,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                 ),
                 elevation: 4,
                 highlightColor: Color(0xff4b62ed),
-                color: Color(0xff3b53e5),
+                color: SharedData.mainColor,
                 padding: EdgeInsets.fromLTRB(15, 12, 15, 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(15.0),

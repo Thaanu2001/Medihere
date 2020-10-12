@@ -23,7 +23,7 @@ class BackActionButton extends StatelessWidget {
               offset: Offset(2.5, 2.5),
             )
           ],
-          color: Color(0xff3b53e5),
+          color: Color(0xff6b03a1),
           shape: BoxShape.circle,
         ),
         child: new Icon(Icons.arrow_left, color: Color(0xffffffff), size: 40.0),
