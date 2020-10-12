@@ -232,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen>
                           context,
                           snapshot['name'].toString(),
                           snapshot['place'].toString(),
-                          snapshot['place'].toString());
+                          snapshot['code'].toString());
                     },
                   ),
                   decoration: BoxDecoration(

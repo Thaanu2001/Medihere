@@ -29,23 +29,25 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
   double image2Opacity = 0.5;
   double image3Opacity = 0.5;
 
-  List filePathList = new List();
-
   PickedFile imageFile;
   File croppedImage1;
   File croppedImage2;
   File croppedImage3;
+
   bool isImage1Available = false;
   bool isImage2Available = false;
   bool isImage3Available = false;
   bool firstImageRemoved = false;
+
+  String filePath1;
+  String filePath2;
+  String filePath3;
 
   _openGallery(BuildContext context) async {
     //* Get prescription using gallery --------------------------------------------------------------------------------
     var picture = await ImagePicker().getImage(source: ImageSource.gallery);
     this.setState(() {
       imageFile = picture;
-      print('Hereeeeeeeeee - ${imageFile.path}');
     });
     Navigator.of(context).pop();
     _cropImage(context);
@@ -56,7 +58,6 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
     var picture = await ImagePicker().getImage(source: ImageSource.camera);
     this.setState(() {
       imageFile = picture;
-      print('Hereeeeeeeeee - ${imageFile.path}');
     });
     Navigator.of(context).pop();
     _cropImage(context);
@@ -89,10 +90,10 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
 
   _startUpload() {
     //* Start uploading image to firestore ------------------------------------------------------------------------
-    String filePath = 'images/${DateTime.now()}.png';
-    filePathList.add(filePath);
+    String filePath =
+        'prescriptions/${widget.pharmacyCode}/${DateTime.now()}.png';
 
-    if (isImage2Available || isImage3Available) {
+    if (isImage1Available || isImage2Available || isImage3Available) {
       print('here');
       _uploadTask = null;
     }
@@ -105,12 +106,17 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
         } else {
           _uploadTask = _storage.ref().child(filePath).putFile(croppedImage1);
         }
+        filePath1 = filePath;
       } else if (!isImage2Available) {
         isImage2Available = true;
         _uploadTask = _storage.ref().child(filePath).putFile(croppedImage2);
+        filePath2 = filePath;
       } else {
         _uploadTask = _storage.ref().child(filePath).putFile(croppedImage3);
+        filePath3 = filePath;
+        isImage3Available = true;
       }
+      print('$isImage1Available, $isImage2Available, $isImage3Available');
     });
   }
 
@@ -133,8 +139,6 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
           }
 
           return Column(
-            //mainAxisAlignment: MainAxisAlignment.center,
-            //crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 //* Back Button ------------------------------------------------------------------------------------
@@ -173,12 +177,16 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                 ),
               ),
               Container(
+                //* Image Uploading Card ---------------------------------------------------------------------------------------
                 margin: EdgeInsets.fromLTRB(30, 10, 30, 20),
                 child: Card(
                   child: Row(
                     children: [
                       SizedBox(width: 10),
-                      (filePathList.length != 3)
+                      (!(isImage1Available &&
+                                  isImage2Available &&
+                                  isImage3Available) &&
+                              _uploadTask.isComplete)
                           ? Container(
                               //* Upload more button --------------------------------------------------------------------
                               margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -210,7 +218,10 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                               ),
                             )
                           : Container(),
-                      (filePathList.length != 3)
+                      (!(isImage1Available &&
+                                  isImage2Available &&
+                                  isImage3Available) &&
+                              _uploadTask.isComplete)
                           ? SizedBox(width: 10)
                           : Container(),
                       (isImage3Available)
@@ -242,16 +253,17 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                                             splashColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
-                                              print(filePathList[2]);
-                                              await _storage
-                                                  .ref()
-                                                  .child(filePathList[2])
-                                                  .delete();
-                                              filePathList.removeAt(2);
-                                              print('Done');
-                                              setState(() {
-                                                isImage3Available = false;
-                                              });
+                                              if (isImage3Available) {
+                                                setState(() {
+                                                  isImage3Available = false;
+                                                });
+                                                await _storage
+                                                    .ref()
+                                                    .child(filePath3)
+                                                    .delete();
+                                                print('Done');
+                                                print('image 3');
+                                              }
                                             },
                                             child: new Container(
                                               width: 22,
@@ -317,16 +329,17 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                                             splashColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
-                                              print(filePathList[1]);
-                                              await _storage
-                                                  .ref()
-                                                  .child(filePathList[1])
-                                                  .delete();
-                                              filePathList.removeAt(1);
-                                              print('Done');
-                                              setState(() {
-                                                isImage2Available = false;
-                                              });
+                                              if (isImage2Available) {
+                                                setState(() {
+                                                  isImage2Available = false;
+                                                });
+                                                await _storage
+                                                    .ref()
+                                                    .child(filePath2)
+                                                    .delete();
+                                                print('Done');
+                                                print('image 2');
+                                              }
                                             },
                                             child: new Container(
                                               width: 22,
@@ -394,16 +407,18 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                                             splashColor: Colors.transparent,
                                             highlightColor: Colors.transparent,
                                             onTap: () async {
-                                              print(filePathList[0]);
-                                              await _storage
-                                                  .ref()
-                                                  .child(filePathList[0])
-                                                  .delete();
-                                              print('Done');
-                                              setState(() {
-                                                isImage1Available = false;
-                                                firstImageRemoved = true;
-                                              });
+                                              if (isImage1Available) {
+                                                setState(() {
+                                                  isImage1Available = false;
+                                                  firstImageRemoved = true;
+                                                });
+                                                await _storage
+                                                    .ref()
+                                                    .child(filePath1)
+                                                    .delete();
+                                                print('Done');
+                                                print('image 1');
+                                              }
                                             },
                                             child: new Container(
                                               width: 22,
@@ -439,11 +454,6 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                               ),
                             )
                           : Container(),
-                      // Container(
-                      //   color: Color(0xfff9f9f9),
-                      //   width: (MediaQuery.of(context).size.width * 0.3) - 25,
-                      //   child: Text('s'),
-                      // )
                     ],
                   ),
                   color: Color(0xff939393),

@@ -22,7 +22,7 @@ class MediHere extends StatelessWidget {
       theme: ThemeData(
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        scaffoldBackgroundColor: Color(0xfff9f9f9),
+        scaffoldBackgroundColor: Color(0xffececec),
         accentColor: Color(0xff3b53e5),
       ),
       home: AuthService().handleAuth(),
