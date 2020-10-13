@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:medihere/buttons/back_button.dart';
 import 'package:medihere/sharedData.dart';
+import 'package:medihere/widgets/scroll_glow_disabler.dart';
 
 class PrescriptionUploadScreen extends StatefulWidget {
   final File file;
@@ -130,6 +131,7 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //resizeToAvoidBottomInset: false,
       body: StreamBuilder<StorageTaskEvent>(
         stream: _uploadTask.events,
         builder: (context, snapshot) {
@@ -186,301 +188,437 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                       fontWeight: FontWeight.w300),
                 ),
               ),
-              Container(
-                //* Image Uploading Card ---------------------------------------------------------------------------------------
-                margin: EdgeInsets.fromLTRB(30, 10, 30, 20),
-                child: Card(
-                  child: Row(
-                    children: [
-                      SizedBox(width: 10),
-                      (!(isImage1Available &&
-                                  isImage2Available &&
-                                  isImage3Available) &&
-                              _uploadTask.isComplete)
-                          ? Container(
-                              //* Upload more button --------------------------------------------------------------------
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              color: Color(0xfff9f9f9),
-                              height: 124,
-                              width: (MediaQuery.of(context).size.width * 0.3) -
-                                  25,
-                              child: InkWell(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Icon(Icons.add_a_photo_outlined),
-                                    Text(
-                                      'Add Image',
-                                      style: TextStyle(
-                                          fontFamily: 'sf',
-                                          fontSize: 14,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                  ],
+              Expanded(
+                child: ScrollGlowDisabler(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          //* Image Uploading Card ---------------------------------------------------------------------------------------
+                          margin: EdgeInsets.fromLTRB(30, 10, 30, 20),
+                          child: Card(
+                            child: Row(
+                              children: [
+                                SizedBox(width: 10),
+                                (!(isImage1Available &&
+                                            isImage2Available &&
+                                            isImage3Available) &&
+                                        _uploadTask.isComplete)
+                                    ? Container(
+                                        //* Upload more button --------------------------------------------------------------------
+                                        margin:
+                                            EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                        color: Color(0xfff9f9f9),
+                                        height: 124,
+                                        width:
+                                            (MediaQuery.of(context).size.width *
+                                                    0.3) -
+                                                25,
+                                        child: InkWell(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Icon(Icons.add_a_photo_outlined),
+                                              Text(
+                                                'Add Image',
+                                                style: TextStyle(
+                                                    fontFamily: 'sf',
+                                                    fontSize: 14,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
+                                            ],
+                                          ),
+                                          onTap: () {
+                                            importChoiceDialog(context);
+                                            print(isImage2Available);
+                                            print(isImage3Available);
+                                          },
+                                        ),
+                                      )
+                                    : Container(),
+                                (!(isImage1Available &&
+                                            isImage2Available &&
+                                            isImage3Available) &&
+                                        _uploadTask.isComplete)
+                                    ? SizedBox(width: 10)
+                                    : Container(),
+                                (isImage3Available)
+                                    ? Container(
+                                        //* Uploaded image preview 3 ------------------------------------------------------
+                                        margin:
+                                            EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                        width:
+                                            (MediaQuery.of(context).size.width *
+                                                    0.3) -
+                                                25,
+                                        color: Colors.white,
+                                        child: Stack(
+                                          alignment: Alignment.topCenter,
+                                          children: [
+                                            Opacity(
+                                              opacity: image3Opacity,
+                                              child: Image.file(
+                                                croppedImage3,
+                                                // width: 90,
+                                                height: 120,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                            (image3Opacity == 1)
+                                                //* Delete button for image 3 ------------------------------------------------------
+                                                ? Container(
+                                                    alignment:
+                                                        Alignment.topRight,
+                                                    margin: EdgeInsets.only(
+                                                        top: 5, right: 5),
+                                                    child: InkResponse(
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      highlightColor:
+                                                          Colors.transparent,
+                                                      onTap: () async {
+                                                        if (isImage3Available) {
+                                                          setState(() {
+                                                            isImage3Available =
+                                                                false;
+                                                          });
+                                                          await _storage
+                                                              .ref()
+                                                              .child(filePath3)
+                                                              .delete();
+                                                          print('Done');
+                                                          print('image 3');
+                                                        }
+                                                      },
+                                                      child: new Container(
+                                                        width: 22,
+                                                        height: 22,
+                                                        decoration:
+                                                            new BoxDecoration(
+                                                          color:
+                                                              Color(0xbb3b53e5),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: new Icon(
+                                                            Icons.close,
+                                                            color: Color(
+                                                                0xffffffff),
+                                                            size: 15.0),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
+                                            (image3Opacity == 0.5)
+                                                //* Progress indicator for image 2 ------------------------------------------------------
+                                                ? Positioned.fill(
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: SizedBox(
+                                                        height: 30.0,
+                                                        width: 30.0,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          value: null,
+                                                          strokeWidth: 2.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
+                                          ],
+                                        ),
+                                      )
+                                    : Container(),
+                                (isImage3Available)
+                                    ? SizedBox(width: 10)
+                                    : Container(),
+                                (isImage2Available)
+                                    ? Container(
+                                        //* Uploaded image preview 2 ------------------------------------------------------
+                                        margin:
+                                            EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                        width:
+                                            (MediaQuery.of(context).size.width *
+                                                    0.3) -
+                                                25,
+                                        color: Colors.white,
+                                        child: Stack(
+                                          alignment: Alignment.topCenter,
+                                          children: [
+                                            Opacity(
+                                              opacity: image2Opacity,
+                                              child: Image.file(
+                                                croppedImage2,
+                                                // width: 90,
+                                                height: 120,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                            (image2Opacity == 1)
+                                                //* Delete button for image 2 ------------------------------------------------------
+                                                ? Container(
+                                                    alignment:
+                                                        Alignment.topRight,
+                                                    margin: EdgeInsets.only(
+                                                        top: 5, right: 5),
+                                                    child: InkResponse(
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      highlightColor:
+                                                          Colors.transparent,
+                                                      onTap: () async {
+                                                        if (isImage2Available) {
+                                                          setState(() {
+                                                            isImage2Available =
+                                                                false;
+                                                          });
+                                                          await _storage
+                                                              .ref()
+                                                              .child(filePath2)
+                                                              .delete();
+                                                          print('Done');
+                                                          print('image 2');
+                                                        }
+                                                      },
+                                                      child: new Container(
+                                                        width: 22,
+                                                        height: 22,
+                                                        decoration:
+                                                            new BoxDecoration(
+                                                          color:
+                                                              Color(0xbb3b53e5),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: new Icon(
+                                                            Icons.close,
+                                                            color: Color(
+                                                                0xffffffff),
+                                                            size: 15.0),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
+                                            (image2Opacity == 0.5)
+                                                //* Progress indicator for image 2 ------------------------------------------------------
+                                                ? Positioned.fill(
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: SizedBox(
+                                                        height: 30.0,
+                                                        width: 30.0,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          value: null,
+                                                          strokeWidth: 2.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
+                                          ],
+                                        ),
+                                      )
+                                    : Container(),
+                                (isImage2Available)
+                                    ? SizedBox(width: 10)
+                                    : Container(),
+                                (isImage1Available)
+                                    ? Container(
+                                        //* Uploaded image 1 preview ------------------------------------------------------
+                                        margin:
+                                            EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                        width:
+                                            (MediaQuery.of(context).size.width *
+                                                    0.3) -
+                                                25,
+                                        color: Colors.white,
+                                        child: Stack(
+                                          alignment: Alignment.topCenter,
+                                          children: [
+                                            Opacity(
+                                              opacity: image1Opacity,
+                                              child: Image.file(
+                                                (!firstImageRemoved)
+                                                    ? widget.file
+                                                    : croppedImage1,
+                                                // width: 90,
+                                                height: 120,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                            (image1Opacity == 1)
+                                                //* Delete button for image 1 ------------------------------------------------------
+                                                ? Container(
+                                                    alignment:
+                                                        Alignment.topRight,
+                                                    margin: EdgeInsets.only(
+                                                        top: 5, right: 5),
+                                                    child: InkResponse(
+                                                      splashColor:
+                                                          Colors.transparent,
+                                                      highlightColor:
+                                                          Colors.transparent,
+                                                      onTap: () async {
+                                                        if (isImage1Available) {
+                                                          setState(() {
+                                                            isImage1Available =
+                                                                false;
+                                                            firstImageRemoved =
+                                                                true;
+                                                          });
+                                                          await _storage
+                                                              .ref()
+                                                              .child(filePath1)
+                                                              .delete();
+                                                          print('Done');
+                                                          print('image 1');
+                                                        }
+                                                      },
+                                                      child: new Container(
+                                                        width: 22,
+                                                        height: 22,
+                                                        decoration:
+                                                            new BoxDecoration(
+                                                          color:
+                                                              Color(0xbb3b53e5),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: new Icon(
+                                                            Icons.close,
+                                                            color: Color(
+                                                                0xffffffff),
+                                                            size: 15.0),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
+                                            (image1Opacity == 0.5)
+                                                ? Positioned.fill(
+                                                    //* Progress indicator for image 1 ------------------------------------------------------
+                                                    child: Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: SizedBox(
+                                                        height: 30.0,
+                                                        width: 30.0,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          value: null,
+                                                          strokeWidth: 2.0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : Container(),
+                                          ],
+                                        ),
+                                      )
+                                    : Container(),
+                              ],
+                            ),
+                            color: Color(0xff939393),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12)),
+                            ),
+                            elevation: 0,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 8,
+                                  offset: Offset(0, 10),
+                                  color: Color(0xff000000).withOpacity(.1),
+                                  spreadRadius: -9)
+                            ],
+                          ),
+                        ),
+                        Container(
+                          //* Add a note Text ---------------------------------------------------------------------------------------------
+                          padding: EdgeInsets.fromLTRB(30, 4, 0, 0),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Add a note',
+                            style: TextStyle(
+                                fontFamily: 'sf',
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                        Container(
+                          //* Add a note TextField ------------------------------------------------------------------------
+                          padding: EdgeInsets.fromLTRB(30, 6, 30, 0),
+                          alignment: Alignment.topLeft,
+                          child: ScrollGlowDisabler(
+                            child: TextField(
+                              // keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: 4,
+                              style: TextStyle(
+                                  fontFamily: 'sf',
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400),
+                              decoration: new InputDecoration(
+                                filled: true,
+                                fillColor: SharedData.textFieldBackgroundColor,
+                                focusColor: Colors.red,
+                                counter: SizedBox.shrink(),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: SharedData.mainColor, width: 2),
                                 ),
-                                onTap: () {
-                                  importChoiceDialog(context);
-                                  print(isImage2Available);
-                                  print(isImage3Available);
-                                },
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: SharedData.mainColor, width: 2),
+                                ),
                               ),
-                            )
-                          : Container(),
-                      (!(isImage1Available &&
-                                  isImage2Available &&
-                                  isImage3Available) &&
-                              _uploadTask.isComplete)
-                          ? SizedBox(width: 10)
-                          : Container(),
-                      (isImage3Available)
-                          ? Container(
-                              //* Uploaded image preview 3 ------------------------------------------------------
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              width: (MediaQuery.of(context).size.width * 0.3) -
-                                  25,
-                              color: Colors.white,
-                              child: Stack(
-                                alignment: Alignment.topCenter,
-                                children: [
-                                  Opacity(
-                                    opacity: image3Opacity,
-                                    child: Image.file(
-                                      croppedImage3,
-                                      // width: 90,
-                                      height: 120,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  (image3Opacity == 1)
-                                      //* Delete button for image 3 ------------------------------------------------------
-                                      ? Container(
-                                          alignment: Alignment.topRight,
-                                          margin:
-                                              EdgeInsets.only(top: 5, right: 5),
-                                          child: InkResponse(
-                                            splashColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              if (isImage3Available) {
-                                                setState(() {
-                                                  isImage3Available = false;
-                                                });
-                                                await _storage
-                                                    .ref()
-                                                    .child(filePath3)
-                                                    .delete();
-                                                print('Done');
-                                                print('image 3');
-                                              }
-                                            },
-                                            child: new Container(
-                                              width: 22,
-                                              height: 22,
-                                              decoration: new BoxDecoration(
-                                                color: Color(0xbb3b53e5),
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: new Icon(Icons.close,
-                                                  color: Color(0xffffffff),
-                                                  size: 15.0),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                  (image3Opacity == 0.5)
-                                      //* Progress indicator for image 2 ------------------------------------------------------
-                                      ? Positioned.fill(
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: SizedBox(
-                                              height: 30.0,
-                                              width: 30.0,
-                                              child: CircularProgressIndicator(
-                                                value: null,
-                                                strokeWidth: 2.0,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                ],
+                              onChanged: (value) {},
+                            ),
+                          ),
+                        ),
+                        Container(
+                          //* Continue Button ----------------------------------------------------------------------------------
+                          alignment: Alignment.bottomCenter,
+                          margin: EdgeInsets.fromLTRB(30, 15, 30, 20),
+                          child: RaisedButton(
+                            child: Container(
+                              width: double.infinity,
+                              child: Text(
+                                'Send',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontFamily: 'sf',
+                                    fontSize: 22,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w400),
+                                //width: double.infinity,
                               ),
-                            )
-                          : Container(),
-                      (isImage3Available) ? SizedBox(width: 10) : Container(),
-                      (isImage2Available)
-                          ? Container(
-                              //* Uploaded image preview 2 ------------------------------------------------------
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              width: (MediaQuery.of(context).size.width * 0.3) -
-                                  25,
-                              color: Colors.white,
-                              child: Stack(
-                                alignment: Alignment.topCenter,
-                                children: [
-                                  Opacity(
-                                    opacity: image2Opacity,
-                                    child: Image.file(
-                                      croppedImage2,
-                                      // width: 90,
-                                      height: 120,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  (image2Opacity == 1)
-                                      //* Delete button for image 2 ------------------------------------------------------
-                                      ? Container(
-                                          alignment: Alignment.topRight,
-                                          margin:
-                                              EdgeInsets.only(top: 5, right: 5),
-                                          child: InkResponse(
-                                            splashColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              if (isImage2Available) {
-                                                setState(() {
-                                                  isImage2Available = false;
-                                                });
-                                                await _storage
-                                                    .ref()
-                                                    .child(filePath2)
-                                                    .delete();
-                                                print('Done');
-                                                print('image 2');
-                                              }
-                                            },
-                                            child: new Container(
-                                              width: 22,
-                                              height: 22,
-                                              decoration: new BoxDecoration(
-                                                color: Color(0xbb3b53e5),
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: new Icon(Icons.close,
-                                                  color: Color(0xffffffff),
-                                                  size: 15.0),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                  (image2Opacity == 0.5)
-                                      //* Progress indicator for image 2 ------------------------------------------------------
-                                      ? Positioned.fill(
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: SizedBox(
-                                              height: 30.0,
-                                              width: 30.0,
-                                              child: CircularProgressIndicator(
-                                                value: null,
-                                                strokeWidth: 2.0,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                ],
-                              ),
-                            )
-                          : Container(),
-                      (isImage2Available) ? SizedBox(width: 10) : Container(),
-                      (isImage1Available)
-                          ? Container(
-                              //* Uploaded image 1 preview ------------------------------------------------------
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              width: (MediaQuery.of(context).size.width * 0.3) -
-                                  25,
-                              color: Colors.white,
-                              child: Stack(
-                                alignment: Alignment.topCenter,
-                                children: [
-                                  Opacity(
-                                    opacity: image1Opacity,
-                                    child: Image.file(
-                                      (!firstImageRemoved)
-                                          ? widget.file
-                                          : croppedImage1,
-                                      // width: 90,
-                                      height: 120,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  (image1Opacity == 1)
-                                      //* Delete button for image 1 ------------------------------------------------------
-                                      ? Container(
-                                          alignment: Alignment.topRight,
-                                          margin:
-                                              EdgeInsets.only(top: 5, right: 5),
-                                          child: InkResponse(
-                                            splashColor: Colors.transparent,
-                                            highlightColor: Colors.transparent,
-                                            onTap: () async {
-                                              if (isImage1Available) {
-                                                setState(() {
-                                                  isImage1Available = false;
-                                                  firstImageRemoved = true;
-                                                });
-                                                await _storage
-                                                    .ref()
-                                                    .child(filePath1)
-                                                    .delete();
-                                                print('Done');
-                                                print('image 1');
-                                              }
-                                            },
-                                            child: new Container(
-                                              width: 22,
-                                              height: 22,
-                                              decoration: new BoxDecoration(
-                                                color: Color(0xbb3b53e5),
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: new Icon(Icons.close,
-                                                  color: Color(0xffffffff),
-                                                  size: 15.0),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                  (image1Opacity == 0.5)
-                                      ? Positioned.fill(
-                                          //* Progress indicator for image 1 ------------------------------------------------------
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: SizedBox(
-                                              height: 30.0,
-                                              width: 30.0,
-                                              child: CircularProgressIndicator(
-                                                value: null,
-                                                strokeWidth: 2.0,
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : Container(),
-                                ],
-                              ),
-                            )
-                          : Container(),
-                    ],
+                            ),
+                            elevation: 4,
+                            highlightColor: SharedData.buttonHighlightColor,
+                            color: SharedData.mainColor,
+                            padding: EdgeInsets.fromLTRB(15, 12, 15, 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(15.0),
+                            ),
+                            onPressed: () {},
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  color: Color(0xff939393),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                  ),
-                  elevation: 0,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 8,
-                        offset: Offset(0, 10),
-                        color: Color(0xff000000).withOpacity(.1),
-                        spreadRadius: -9)
-                  ],
                 ),
               ),
             ],

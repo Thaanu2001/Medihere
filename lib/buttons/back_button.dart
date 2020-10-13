@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medihere/sharedData.dart';
 
 class BackActionButton extends StatelessWidget {
   final GestureTapCallback onPressed;
@@ -23,7 +24,7 @@ class BackActionButton extends StatelessWidget {
               offset: Offset(2.5, 2.5),
             )
           ],
-          color: Color(0xff6b03a1),
+          color: SharedData.mainColor,
           shape: BoxShape.circle,
         ),
         child: new Icon(Icons.arrow_left, color: Color(0xffffffff), size: 40.0),

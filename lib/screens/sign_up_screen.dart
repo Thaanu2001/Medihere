@@ -96,7 +96,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     fontWeight: FontWeight.w400),
                 decoration: new InputDecoration(
                   filled: true,
-                  fillColor: Color(0xffebedfc),
+                  fillColor: SharedData.textFieldBackgroundColor,
                   focusColor: Colors.red,
                   counter: SizedBox.shrink(),
                   enabledBorder: UnderlineInputBorder(
@@ -140,7 +140,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     fontWeight: FontWeight.w400),
                 decoration: new InputDecoration(
                   filled: true,
-                  fillColor: Color(0xffebedfc),
+                  fillColor: SharedData.textFieldBackgroundColor,
                   focusColor: Colors.red,
                   counter: SizedBox.shrink(),
                   enabledBorder: UnderlineInputBorder(
@@ -204,7 +204,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                   ),
                 ),
                 elevation: 4,
-                highlightColor: Color(0xff4b62ed),
+                highlightColor: SharedData.buttonHighlightColor,
                 color: SharedData.mainColor,
                 padding: EdgeInsets.fromLTRB(15, 12, 15, 12),
                 shape: RoundedRectangleBorder(
