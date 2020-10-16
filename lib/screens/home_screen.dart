@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen>
                         fontFamily: 'sf',
                         fontSize: 22,
                         color: Colors.black,
-                        fontWeight: FontWeight.w400),
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
                 Container(

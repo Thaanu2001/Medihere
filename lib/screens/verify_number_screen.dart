@@ -5,6 +5,7 @@ import 'package:medihere/buttons/back_button.dart';
 import 'package:medihere/screens/sign_up_screen.dart';
 import 'package:medihere/services/auth_service.dart';
 import 'package:medihere/widgets/dismiss_keyboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class VerifyNumberScreen extends StatefulWidget {
   final String verificationId, name, phoneNo;
@@ -50,7 +51,6 @@ class _VerifyNumberScreenState extends State<VerifyNumberScreen> {
   //   startTimer();
   //   super.initState();
   // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

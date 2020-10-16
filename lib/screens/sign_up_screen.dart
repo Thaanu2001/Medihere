@@ -172,7 +172,7 @@ class SignUpScreenState extends State<SignUpScreen> {
             ),
             (error)
                 ? Container(
-                    //* SMS Verify Text -------------------------------------------------------------------------------
+                    //* Error message Text -------------------------------------------------------------------------------
                     padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
                     alignment: Alignment.topLeft,
                     child: Text(

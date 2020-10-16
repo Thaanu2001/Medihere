@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medihere/buttons/back_button.dart';
 import 'package:medihere/sharedData.dart';
 import 'package:medihere/widgets/scroll_glow_disabler.dart';
@@ -26,6 +28,8 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
   final FirebaseStorage _storage =
       FirebaseStorage(storageBucket: 'gs://medihere-f0428.appspot.com/');
 
+  final noteText = TextEditingController();
+
   StorageUploadTask _uploadTask;
   double image1Opacity = 0.5;
   double image2Opacity = 0.5;
@@ -44,6 +48,8 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
   String filePath1;
   String filePath2;
   String filePath3;
+
+  bool error = false;
 
   _openGallery(BuildContext context) async {
     //* Get prescription using gallery --------------------------------------------------------------------------------
@@ -122,6 +128,22 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
     });
   }
 
+  _uploadImageData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseFirestore.instance.collection('prescriptions').doc().set({
+      'user_contact': '${auth.currentUser.phoneNumber.replaceAll('+94', '0')}',
+      'user_name': '${auth.currentUser.displayName}',
+      'pharmacy_name': '${widget.pharmacyName}',
+      'pharmacy_code': '${widget.pharmacyCode}',
+      'image_1': filePath1,
+      'image_2': (isImage2Available) ? filePath2 : '',
+      'image_3': (isImage3Available) ? filePath3 : '',
+      'status': 0,
+      'time': DateTime.now(),
+      'note': noteText.text
+    });
+  }
+
   @override
   void initState() {
     _startUpload();
@@ -172,7 +194,7 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                       fontFamily: 'sf',
                       fontSize: 22,
                       color: Colors.black,
-                      fontWeight: FontWeight.w400),
+                      fontWeight: FontWeight.bold),
                 ),
               ),
               Container(
@@ -197,6 +219,12 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                           //* Image Uploading Card ---------------------------------------------------------------------------------------
                           margin: EdgeInsets.fromLTRB(30, 10, 30, 20),
                           child: Card(
+                            color: Color(0xff939393),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(12)),
+                            ),
+                            elevation: 0,
                             child: Row(
                               children: [
                                 SizedBox(width: 10),
@@ -208,7 +236,7 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                                         //* Upload more button --------------------------------------------------------------------
                                         margin:
                                             EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                        color: Color(0xfff9f9f9),
+                                        color: Color(0xffececec),
                                         height: 124,
                                         width:
                                             (MediaQuery.of(context).size.width *
@@ -525,12 +553,6 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                                     : Container(),
                               ],
                             ),
-                            color: Color(0xff939393),
-                            shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(12)),
-                            ),
-                            elevation: 0,
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
@@ -559,9 +581,9 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                         Container(
                           //* Add a note TextField ------------------------------------------------------------------------
                           padding: EdgeInsets.fromLTRB(30, 6, 30, 0),
-                          alignment: Alignment.topLeft,
                           child: ScrollGlowDisabler(
                             child: TextField(
+                              controller: noteText,
                               // keyboardType: TextInputType.number,
                               keyboardType: TextInputType.multiline,
                               maxLines: 4,
@@ -571,8 +593,9 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                                   color: Colors.black,
                                   fontWeight: FontWeight.w400),
                               decoration: new InputDecoration(
+                                hintText: 'Add a note...',
                                 filled: true,
-                                fillColor: SharedData.textFieldBackgroundColor,
+                                fillColor: Colors.white,
                                 focusColor: Colors.red,
                                 counter: SizedBox.shrink(),
                                 enabledBorder: UnderlineInputBorder(
@@ -587,7 +610,31 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                               onChanged: (value) {},
                             ),
                           ),
+                          // decoration: BoxDecoration(
+                          //   boxShadow: [
+                          //     BoxShadow(
+                          //         blurRadius: 6,
+                          //         offset: Offset(0, 20),
+                          //         color: Color(0xff000000).withOpacity(.1),
+                          //         spreadRadius: -20)
+                          //   ],
+                          // ),
                         ),
+                        (error)
+                            ? Container(
+                                //* Error message Text -------------------------------------------------------------------------------
+                                padding: EdgeInsets.fromLTRB(30, 10, 30, 0),
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Please upload your prescription',
+                                  style: TextStyle(
+                                      fontFamily: 'sf',
+                                      fontSize: 15,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              )
+                            : Container(),
                         Container(
                           //* Continue Button ----------------------------------------------------------------------------------
                           alignment: Alignment.bottomCenter,
@@ -613,7 +660,13 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(15.0),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              if (isImage1Available) {
+                                _uploadImageData();
+                              } else {
+                                error = true;
+                              }
+                            },
                           ),
                         ),
                       ],

@@ -26,11 +26,12 @@ class AuthService {
   }
 
   //* Sign in
-  signIn(AuthCredential authCreds, context, name, phoneNo) {
+  signIn(AuthCredential authCreds, context, name, phoneNo) async {
     FirebaseAuth.instance.signInWithCredential(authCreds);
     print('Signed In');
 
     registerUser(name, phoneNo);
+    setDisplayName(name);
 
     Route route = SlidingTransition(widget: BottomMenuBar());
     Navigator.pushAndRemoveUntil(
@@ -45,10 +46,19 @@ class AuthService {
   }
 
   //* Register user into firestore
-  registerUser(name, phoneNo) async {
-    await FirebaseFirestore.instance
+  registerUser(name, phoneNo) {
+    FirebaseFirestore.instance
         .collection("users")
         .doc("$phoneNo")
         .set({'name': '$name', 'phone-number': '$phoneNo'});
+  }
+
+  setDisplayName(name) async {
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user == null) {
+      } else {
+        user.updateProfile(displayName: name);
+      }
+    });
   }
 }
