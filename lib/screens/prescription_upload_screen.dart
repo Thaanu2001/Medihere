@@ -6,8 +6,11 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:medihere/buttons/back_button.dart';
+import 'package:medihere/screens/test.dart';
 import 'package:medihere/sharedData.dart';
+import 'package:medihere/transitions/sliding_transition.dart';
 import 'package:medihere/widgets/scroll_glow_disabler.dart';
+import 'package:medihere/screens/test.dart';
 
 class PrescriptionUploadScreen extends StatefulWidget {
   final File file;
@@ -29,6 +32,7 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
       FirebaseStorage(storageBucket: 'gs://medihere-f0428.appspot.com/');
 
   final noteText = TextEditingController();
+  final patientName = TextEditingController();
 
   StorageUploadTask _uploadTask;
   double image1Opacity = 0.5;
@@ -140,7 +144,8 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
       'image_3': (isImage3Available) ? filePath3 : '',
       'status': 0,
       'time': DateTime.now(),
-      'note': noteText.text
+      'note': noteText.text,
+      'patient_name': patientName.text
     });
   }
 
@@ -566,6 +571,52 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                           ),
                         ),
                         Container(
+                          //* Patient Name Text -----------------------------------------------------------------------------
+                          padding: EdgeInsets.fromLTRB(30, 4, 0, 0),
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Patient Name',
+                            style: TextStyle(
+                                fontFamily: 'sf',
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                        Container(
+                          //* Patient Name Textfield ------------------------------------------------------------------------
+                          padding: EdgeInsets.fromLTRB(30, 6, 30, 10),
+                          child: ScrollGlowDisabler(
+                            child: TextField(
+                              controller: patientName,
+                              // keyboardType: TextInputType.number,
+                              // keyboardType: TextInputType.multiline,
+                              // maxLines: 4,
+                              style: TextStyle(
+                                  fontFamily: 'sf',
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w400),
+                              decoration: new InputDecoration(
+                                hintText: 'Enter patient name',
+                                filled: true,
+                                fillColor: Colors.white,
+                                focusColor: Colors.red,
+                                counter: SizedBox.shrink(),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: SharedData.mainColor, width: 2),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: SharedData.mainColor, width: 2),
+                                ),
+                              ),
+                              onChanged: (value) {},
+                            ),
+                          ),
+                        ),
+                        Container(
                           //* Add a note Text ---------------------------------------------------------------------------------------------
                           padding: EdgeInsets.fromLTRB(30, 4, 0, 0),
                           alignment: Alignment.topLeft,
@@ -663,6 +714,8 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
                             onPressed: () {
                               if (isImage1Available) {
                                 _uploadImageData();
+                                Route route = SlidingTransition(widget: Test());
+                                Navigator.push(context, route);
                               } else {
                                 error = true;
                               }
