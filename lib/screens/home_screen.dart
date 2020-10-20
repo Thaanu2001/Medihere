@@ -30,25 +30,29 @@ class _HomeScreenState extends State<HomeScreen>
   _openGallery(BuildContext context, String pharmacyName, String pharmacyPlace,
       String pharmacyCode) async {
     //* Get prescription using gallery --------------------------------------------------------------------------------
-    var picture = await ImagePicker().getImage(source: ImageSource.gallery);
+    var picture = await ImagePicker()
+        .getImage(source: ImageSource.gallery, maxHeight: 800);
     this.setState(() {
       imageFile = picture;
-      print('Hereeeeeeeeee - ${imageFile.path}');
     });
-    Navigator.of(context).pop();
-    _cropImage(context, pharmacyName, pharmacyPlace, pharmacyCode);
+    if (imageFile != null) {
+      Navigator.of(context).pop();
+      _cropImage(context, pharmacyName, pharmacyPlace, pharmacyCode);
+    }
   }
 
   _openCamera(BuildContext context, String pharmacyName, String pharmacyPlace,
       String pharmacyCode) async {
     //* Get prescription using camera --------------------------------------------------------------------------------
-    var picture = await ImagePicker().getImage(source: ImageSource.camera);
+    var picture = await ImagePicker()
+        .getImage(source: ImageSource.camera, maxHeight: 800);
     this.setState(() {
       imageFile = picture;
-      print('Hereeeeeeeeee - ${imageFile.path}');
     });
-    Navigator.of(context).pop();
-    _cropImage(context, pharmacyName, pharmacyPlace, pharmacyCode);
+    if (imageFile != null) {
+      Navigator.of(context).pop();
+      _cropImage(context, pharmacyName, pharmacyPlace, pharmacyCode);
+    }
   }
 
   _cropImage(BuildContext context, String pharmacyName, String pharmacyPlace,

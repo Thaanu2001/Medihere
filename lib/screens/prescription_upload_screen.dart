@@ -57,22 +57,28 @@ class _PrescriptionUploadScreenState extends State<PrescriptionUploadScreen> {
 
   _openGallery(BuildContext context) async {
     //* Get prescription using gallery --------------------------------------------------------------------------------
-    var picture = await ImagePicker().getImage(source: ImageSource.gallery);
+    var picture = await ImagePicker()
+        .getImage(source: ImageSource.gallery, maxHeight: 800);
     this.setState(() {
       imageFile = picture;
     });
-    Navigator.of(context).pop();
-    _cropImage(context);
+    if (imageFile != null) {
+      Navigator.of(context).pop();
+      _cropImage(context);
+    }
   }
 
   _openCamera(BuildContext context) async {
     //* Get prescription using camera --------------------------------------------------------------------------------
-    var picture = await ImagePicker().getImage(source: ImageSource.camera);
+    var picture = await ImagePicker()
+        .getImage(source: ImageSource.camera, maxHeight: 800);
     this.setState(() {
       imageFile = picture;
     });
-    Navigator.of(context).pop();
-    _cropImage(context);
+    if (imageFile != null) {
+      Navigator.of(context).pop();
+      _cropImage(context);
+    }
   }
 
   _cropImage(BuildContext context) async {
