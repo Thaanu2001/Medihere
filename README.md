@@ -1,4 +1,4 @@
-# medihere
+# MediHere
 
 Medicine delivering application 
 
